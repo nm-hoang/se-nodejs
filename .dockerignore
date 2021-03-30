@@ -1,0 +1,8 @@
+node_modules
+.nuxt
+.idea
+.docs
+coverage
+yarn-error.log
+dist
+.eslintcache

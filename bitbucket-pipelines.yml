@@ -1,0 +1,61 @@
+# @format
+
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+# image: node:alpine3.12
+
+pipelines:
+  default:
+    # - parallel:
+    #     - step:
+    #         name: 'Build and Test'
+    #         script:
+    #           - echo "Your build and test goes here..."
+    #     - step:
+    #         name: 'Lint'
+    #         script:
+    #           - echo "Your linting goes here..."
+    #     - step:
+    #         name: 'Security scan'
+    #         script:
+    #           - echo "Your security scan goes here..."
+
+    # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
+    - step:
+        name: 'Deployment to Production'
+        # deployment: production
+        script:
+          - echo "START DEPLOYING TO PRODUCTION..."
+  branches:
+    dev:
+      - step:
+          name: 'Login to server'
+          deployment: Production
+          script:
+            - echo "Deploying master to live..."
+            - echo $SERVER
+            - echo $SSH_USER
+            - echo $SSH_USER@$SERVER
+
+            - cd ~/
+            - ssh-keygen -f id_rsa -t rsa -b 4096 -N ''
+            - ls
+            - cat id_rsa.pub
+
+            # - ssh-copy-id -i ~/.ssh/id_rsa.pub $SSH_USER@$SERVER
+
+            - cat id_rsa.pub >> authorized_keys
+            - chmod 600 authorized_keys
+
+            - base64 < id_rsa
+            - ssh-keyscan -t rsa bitbucket.org > known_hosts
+            - (umask  077 ; base64 -di > ~/.ssh/id_rsa)
+            - ssh -i id_rsa $SSH_USER@$SERVER 'cd ~ && sh deploy-script.sh'
+
+            # - pipe: atlassian/ssh-run:0.2.8
+            #   variables:
+            #     SSH_USER: $SSH_USER
+            #     SERVER: $SERVER
+            #     COMMAND: 'sh deploy-script.sh'

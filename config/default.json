@@ -1,0 +1,6 @@
+{
+  "vnp_TmnCode": "RJONTNF4",
+  "vnp_HashSecret": "HSCGKNXPFQLDAFQRYOENRSNWCXCYDCDL",
+  "vnp_Url": "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+  "vnp_ReturnUrl": "/vnpay_return"
+}
